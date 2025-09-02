@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Height → Weight Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <h1>Height → Weight Predictor</h1>
+    <form id="predict-form">
+      <label for="height">Enter Height (cm)</label>
+      <input id="height" type="number" min="50" max="300" step="0.1" required>
+      <button type="submit">Predict</button>
+    </form>
+
+    <p id="error" class="error"></p>
+
+    <div id="result" class="result hidden">
+      <p><b>Height:</b> <span id="r-height"></span> cm</p>
+      <p><b>Predicted Weight:</b> <span id="r-weight"></span> kg</p>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('predict-form');
+    const heightEl = document.getElementById('height');
+    const errorEl = document.getElementById('error');
+    const resultEl = document.getElementById('result');
+    const rHeight = document.getElementById('r-height');
+    const rWeight = document.getElementById('r-weight');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.textContent = '';
+
+      const height = parseFloat(heightEl.value);
+      if (Number.isNaN(height) || height < 50 || height > 300) {
+        errorEl.textContent = 'Enter a valid height between 50–300 cm';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/predict', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({height_cm: height})
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error);
+
+        rHeight.textContent = data.height_cm;
+        rWeight.textContent = data.predicted_weight_kg;
+        resultEl.classList.remove('hidden');
+      } catch (err) {
+        errorEl.textContent = err.message;
+        resultEl.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
