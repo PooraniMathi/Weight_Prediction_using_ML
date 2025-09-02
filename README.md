@@ -1,5 +1,4 @@
-# Weight_Prediction_using_ML
-Weight Prediction Using Linear Regression Machine Learning Algorithm
+#Weight Prediction Using Linear Regression Machine Learning Algorithm
 <img width="952" height="623" alt="image" src="https://github.com/user-attachments/assets/0ce4299a-00a8-48ff-989d-56a682d3ce31" />
 
 ________________________________________
